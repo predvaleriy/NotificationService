@@ -1,19 +1,30 @@
-﻿// Подключаем наши модели (EmailNotification, SmsNotification)
-using NotificationService.Models;
-// Подключаем наши сервисы отправки (INotificationSender, EmailSender, SmsSender)
+﻿using NotificationService.Models;
 using NotificationService.Services;
 
-// Создаём список уведомлений (здесь пока просто создаём два разных объекта)
-var email = new EmailNotification("ivan@mail.ru", "Счёт на оплату", "Ваш счёт №105 сформирован.");
-var sms = new SmsNotification("+79991234567", "Код входа: 9912");
+// 1. Создаём наш менеджер рассылок
+var manager = new NotificationManager();
 
-// Создаём конкретные отправщики, но записываем их в переменные типа интерфейса INotificationSender (Абстракция!)
-INotificationSender emailSender = new EmailSender();
-INotificationSender smsSender = new SmsSender();
+// 2. Регистрируем в нём доступные каналы (настраиваем Словарь)
+manager.RegisterSender<EmailNotification>(new EmailSender());
+manager.RegisterSender<SmsNotification>(new SmsSender());
 
-// Вызываем один и тот же метод Send() у обоих отправщиков — каждый сработает по-своему (Полиморфизм!)
-emailSender.Send(email);
-smsSender.Send(sms);
+// 3. Создаём пачку разных уведомлений, включая один случайный дубль
+var queue = new List<Notification>
+{
+    new EmailNotification("ivan@mail.ru", "Счёт №105", "Ваш счёт сформирован."),
+    new SmsNotification("+79991234567", "Код подтверждения: 9912"),
+    new EmailNotification("ivan@mail.ru", "Счёт №105", "Ваш счёт сформирован."), // Дубль!
+    new EmailNotification("anna@yandex.ru", "Добро пожаловать", "Спасибо за регистрацию!"),
+    new SmsNotification("+79005553322", "Ваш заказ передан курьеру.")
+};
 
-// Проверим защиту: попробуем отправить SMS через EmailSender (должно вывести ошибку и не упасть)
-emailSender.Send(sms);
+Console.WriteLine("=== Запуск пакетной рассылки ===\n");
+
+// 4. Прогоняем всю очередь через менеджер
+foreach (var item in queue)
+{
+    manager.Process(item);
+}
+
+// 5. Сохраняем отчёт о работе в JSON-файл в папке проекта
+manager.SaveHistoryToJson("history.json");

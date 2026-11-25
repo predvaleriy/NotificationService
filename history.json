@@ -1,0 +1,30 @@
+[
+  {
+    "Channel": "EmailNotification",
+    "Recipient": "ivan@mail.ru",
+    "Message": "Ваш счёт сформирован.",
+    "IsSuccess": true,
+    "SentAt": "2026-11-25T23:42:53.0535693+05:00"
+  },
+  {
+    "Channel": "SmsNotification",
+    "Recipient": "+79991234567",
+    "Message": "Код подтверждения: 9912",
+    "IsSuccess": true,
+    "SentAt": "2026-11-25T23:42:53.0562573+05:00"
+  },
+  {
+    "Channel": "EmailNotification",
+    "Recipient": "anna@yandex.ru",
+    "Message": "Спасибо за регистрацию!",
+    "IsSuccess": true,
+    "SentAt": "2026-11-25T23:42:53.0563568+05:00"
+  },
+  {
+    "Channel": "SmsNotification",
+    "Recipient": "+79005553322",
+    "Message": "Ваш заказ передан курьеру.",
+    "IsSuccess": true,
+    "SentAt": "2026-11-25T23:42:53.0563857+05:00"
+  }
+]
